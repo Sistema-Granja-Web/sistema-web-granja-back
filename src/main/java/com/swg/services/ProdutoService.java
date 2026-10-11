@@ -1,0 +1,36 @@
+package com.swg.services;
+
+import com.swg.dto.ProdutoCadastroDTO;
+import com.swg.exceptions.NegocioException;
+import com.swg.models.Fornecedor;
+import com.swg.models.Produto;
+import com.swg.repositories.FornecedorRepository;
+import com.swg.repositories.ProdutoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ProdutoService {
+
+    @Autowired
+    private ProdutoRepository produtoRepository;
+
+    @Autowired
+    private FornecedorRepository fornecedorRepository;
+
+    public void cadastrar(ProdutoCadastroDTO dto, String emailFornecedorLogado) {
+        Fornecedor fornecedor = fornecedorRepository.findById(emailFornecedorLogado)
+                .orElseThrow(() -> new NegocioException("Fornecedor não encontrado na base de dados."));
+
+        Produto produto = new Produto();
+        produto.setNome(dto.getNome());
+        produto.setImagem(dto.getImagem());
+        produto.setValor(dto.getValor());
+        produto.setUnidade(dto.getUnidade());
+        produto.setPossuiEstoque(dto.getPossuiEstoque());
+
+        produto.setFornecedor(fornecedor);
+
+        produto = produtoRepository.save(produto);
+    }
+}

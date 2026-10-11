@@ -27,6 +27,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/fornecedor/**").permitAll()
+                        .requestMatchers("/api/produto/**").permitAll()
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/v3/api-docs.yaml",
