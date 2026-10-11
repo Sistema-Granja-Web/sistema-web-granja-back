@@ -1,14 +1,19 @@
 package com.swg.services;
 
 import com.swg.dtos.FornecedorCadastroDTO;
+import com.swg.dtos.FornecedorResponseDTO;
+import com.swg.exceptions.AcessoNegadoException;
 import com.swg.exceptions.NegocioException;
 import com.swg.models.Fornecedor;
 import com.swg.repositories.FornecedorRepository;
 import com.swg.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class FornecedorService {
@@ -21,6 +26,9 @@ public class FornecedorService {
 
     @Autowired
     private JwtService jwtService;
+
+    @Value("${admin.email:admin@admin.com}")
+    private String adminEmail;
 
     public void cadastrar(FornecedorCadastroDTO dto) {
         if (repository.existsById(dto.getEmail())) {
@@ -39,6 +47,16 @@ public class FornecedorService {
         fornecedor.setSenha(passwordEncoder.encode(dto.getSenha()));
 
         repository.save(fornecedor);
+    }
+
+    public List<FornecedorResponseDTO> listarTodos(String emailRequisitante) {
+        if (!adminEmail.equals(emailRequisitante)) {
+            throw new AcessoNegadoException("Acesso restrito. Apenas o administrador possui permissão para esta funcionalidade.");
+        }
+
+        return repository.findAll().stream()
+                .map(FornecedorResponseDTO::new)
+                .toList();
     }
 
 }
