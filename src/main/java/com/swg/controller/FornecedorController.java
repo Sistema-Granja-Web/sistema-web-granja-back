@@ -1,5 +1,6 @@
 package com.swg.controller;
 
+import com.swg.dtos.FornecedorAtualizacaoDTO;
 import com.swg.dtos.FornecedorCadastroDTO;
 import com.swg.dtos.FornecedorResponseDTO;
 import com.swg.services.FornecedorService;
@@ -43,5 +44,14 @@ public class FornecedorController {
         service.exclusaoLogica(emailAlvo, emailRequisitante);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/meus-dados")
+    public ResponseEntity<Void> atualizarCadastroCompleto(@Valid @RequestBody FornecedorAtualizacaoDTO dto) {
+        String emailFornecedorLogado = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        service.atualizarCadastroCompleto(emailFornecedorLogado, dto);
+
+        return ResponseEntity.ok().build();
     }
 }
