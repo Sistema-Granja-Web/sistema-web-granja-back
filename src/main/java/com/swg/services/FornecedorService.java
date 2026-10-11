@@ -6,7 +6,9 @@ import com.swg.exceptions.AcessoNegadoException;
 import com.swg.exceptions.NegocioException;
 import com.swg.models.Fornecedor;
 import com.swg.repositories.FornecedorRepository;
+import com.swg.repositories.ProdutoRepository;
 import com.swg.security.JwtService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -22,10 +24,16 @@ public class FornecedorService {
     private FornecedorRepository repository;
 
     @Autowired
+    private ProdutoRepository produtoRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private AuthService authService;
 
     @Value("${admin.email:admin@admin.com}")
     private String adminEmail;
@@ -58,5 +66,27 @@ public class FornecedorService {
                 .map(FornecedorResponseDTO::new)
                 .toList();
     }
+
+    @Transactional
+    public void exclusaoLogica(String emailAlvo, String emailRequisitante) {
+        if (!adminEmail.equals(emailRequisitante)) {
+            throw new AcessoNegadoException("Acesso restrito. Apenas o administrador pode excluir fornecedores.");
+        }
+
+        Fornecedor fornecedor = repository.findById(emailAlvo)
+                .orElseThrow(() -> new NegocioException("Fornecedor não encontrado."));
+
+        if (!fornecedor.getAtivo()) {
+            throw new NegocioException("Este fornecedor já se encontra inativo.");
+        }
+
+        fornecedor.setAtivo(false);
+        repository.save(fornecedor);
+
+        produtoRepository.inativarEstoqueByFornecedorEmail(emailAlvo);
+
+        authService.revogarTodosTokensDoFornecedor(fornecedor);
+    }
+
 
 }

@@ -43,6 +43,9 @@ public class Fornecedor implements UserDetails {
     @UpdateTimestamp
     private LocalDateTime dataAtualizacao;
 
+    @Column(nullable = false)
+    private Boolean ativo = true;
+
     public Fornecedor() {}
 
     // Getters e Setters
@@ -60,6 +63,8 @@ public class Fornecedor implements UserDetails {
     public void setSenha(String senha) { this.senha = senha; }
     public LocalDateTime getDataCriacao() { return dataCriacao; }
     public LocalDateTime getDataAtualizacao() { return dataAtualizacao; }
+    public Boolean getAtivo() { return ativo; }
+    public void setAtivo(Boolean ativo) { this.ativo = ativo; }
 
     // Métodos do Spring Security
     @Override

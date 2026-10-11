@@ -70,7 +70,7 @@ public class AuthService {
     }
 
 
-    private void revogarTodosTokensDoFornecedor(Fornecedor fornecedor) {
+    public void revogarTodosTokensDoFornecedor(Fornecedor fornecedor) {
         var tokensValidos = tokenRepository.findAllTokensValidosByFornecedor(fornecedor.getEmail());
         if (tokensValidos.isEmpty()) {
             return;

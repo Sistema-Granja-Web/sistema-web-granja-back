@@ -35,4 +35,13 @@ public class FornecedorController {
 
         return ResponseEntity.ok(fornecedores);
     }
+
+    @DeleteMapping("/{emailAlvo:.+}")
+    public ResponseEntity<Void> deletarFornecedor(@PathVariable String emailAlvo) {
+        String emailRequisitante = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        service.exclusaoLogica(emailAlvo, emailRequisitante);
+
+        return ResponseEntity.noContent().build();
+    }
 }
