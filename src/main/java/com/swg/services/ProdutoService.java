@@ -1,6 +1,7 @@
 package com.swg.services;
 
 import com.swg.dto.ProdutoCadastroDTO;
+import com.swg.dtos.ProdutoResponseDTO;
 import com.swg.exceptions.NegocioException;
 import com.swg.models.Fornecedor;
 import com.swg.models.Produto;
@@ -8,6 +9,8 @@ import com.swg.repositories.FornecedorRepository;
 import com.swg.repositories.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ProdutoService {
@@ -32,5 +35,17 @@ public class ProdutoService {
         produto.setFornecedor(fornecedor);
 
         produto = produtoRepository.save(produto);
+    }
+
+    public List<ProdutoResponseDTO> listarTodos() {
+        return produtoRepository.findAll().stream()
+                .map(ProdutoResponseDTO::new)
+                .toList(); // .toList() é nativo do Java 16+
+    }
+
+    public List<ProdutoResponseDTO> listarMeusProdutos(String emailFornecedorLogado) {
+        return produtoRepository.findByFornecedorEmail(emailFornecedorLogado).stream()
+                .map(ProdutoResponseDTO::new)
+                .toList();
     }
 }

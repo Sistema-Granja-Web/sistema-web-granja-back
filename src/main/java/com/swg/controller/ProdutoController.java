@@ -1,6 +1,7 @@
 package com.swg.controller;
 
 import com.swg.dto.ProdutoCadastroDTO;
+import com.swg.dtos.ProdutoResponseDTO;
 import com.swg.services.ProdutoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/produto")
@@ -24,5 +27,19 @@ public class ProdutoController {
         service.cadastrar(dto, emailFornecedorLogado);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProdutoResponseDTO>> listarTodos() {
+        List<ProdutoResponseDTO> produtos = service.listarTodos();
+        return ResponseEntity.ok(produtos);
+    }
+
+    @GetMapping("/meus-produtos")
+    public ResponseEntity<List<ProdutoResponseDTO>> listarMeusProdutos() {
+        String emailFornecedorLogado = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        List<ProdutoResponseDTO> meusProdutos = service.listarMeusProdutos(emailFornecedorLogado);
+        return ResponseEntity.ok(meusProdutos);
     }
 }
