@@ -1,4 +1,4 @@
-package com.br.sistema_web_granja;
+package com.swg;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

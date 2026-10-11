@@ -1,4 +1,4 @@
-package com.br.sistema_web_granja;
+package com.swg;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
