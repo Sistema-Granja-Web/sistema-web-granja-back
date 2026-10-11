@@ -1,7 +1,9 @@
 package com.swg.services;
 
 import com.swg.dto.ProdutoCadastroDTO;
+import com.swg.dtos.ProdutoAtualizacaoDTO;
 import com.swg.dtos.ProdutoResponseDTO;
+import com.swg.exceptions.AcessoNegadoException;
 import com.swg.exceptions.NegocioException;
 import com.swg.models.Fornecedor;
 import com.swg.models.Produto;
@@ -47,5 +49,23 @@ public class ProdutoService {
         return produtoRepository.findByFornecedorEmail(emailFornecedorLogado).stream()
                 .map(ProdutoResponseDTO::new)
                 .toList();
+    }
+
+    public void atualizar(Long idProduto, ProdutoAtualizacaoDTO dto, String emailFornecedorLogado) {
+
+        Produto produto = produtoRepository.findById(idProduto)
+                .orElseThrow(() -> new NegocioException("Produto não encontrado."));
+
+        if (!produto.getFornecedor().getEmail().equals(emailFornecedorLogado)) {
+            throw new AcessoNegadoException("Acesso negado. Apenas o proprietário pode editar este produto.");
+        }
+
+        produto.setNome(dto.getNome());
+        produto.setImagem(dto.getImagem());
+        produto.setValor(dto.getValor());
+        produto.setUnidade(dto.getUnidade());
+        produto.setPossuiEstoque(dto.getPossuiEstoque());
+
+        produto = produtoRepository.save(produto);
     }
 }

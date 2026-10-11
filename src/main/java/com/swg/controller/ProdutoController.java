@@ -1,6 +1,7 @@
 package com.swg.controller;
 
 import com.swg.dto.ProdutoCadastroDTO;
+import com.swg.dtos.ProdutoAtualizacaoDTO;
 import com.swg.dtos.ProdutoResponseDTO;
 import com.swg.services.ProdutoService;
 import jakarta.validation.Valid;
@@ -41,5 +42,16 @@ public class ProdutoController {
 
         List<ProdutoResponseDTO> meusProdutos = service.listarMeusProdutos(emailFornecedorLogado);
         return ResponseEntity.ok(meusProdutos);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> atualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody ProdutoAtualizacaoDTO dto) {
+        String emailFornecedorLogado = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        service.atualizar(id, dto, emailFornecedorLogado);
+
+        return ResponseEntity.ok().build();
     }
 }
