@@ -1,7 +1,11 @@
 package com.swg.models;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tb_produto")
@@ -30,6 +34,13 @@ public class Produto {
     @JoinColumn(name = "fornecedor_email", nullable = false)
     private Fornecedor fornecedor;
 
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime dataCriacao;
+
+    @UpdateTimestamp
+    private LocalDateTime dataAtualizacao;
+
     public Produto() {}
 
     // Getters e Setters
@@ -53,4 +64,9 @@ public class Produto {
 
     public Fornecedor getFornecedor() { return fornecedor; }
     public void setFornecedor(Fornecedor fornecedor) { this.fornecedor = fornecedor; }
+
+    public LocalDateTime getDataCriacao() { return dataCriacao; }
+
+    public LocalDateTime getDataAtualizacao() { return dataAtualizacao; }
+
 }

@@ -1,6 +1,9 @@
 package com.swg.models;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tb_token")
@@ -20,7 +23,13 @@ public class Token {
     @JoinColumn(name = "fornecedor_email")
     public Fornecedor fornecedor;
 
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime dataCriacao;
+
     public Token() {}
+
+    public LocalDateTime getDataCriacao() { return dataCriacao; }
 
     public Token(String token, Fornecedor fornecedor, boolean revogado, boolean expirado) {
         this.token = token;

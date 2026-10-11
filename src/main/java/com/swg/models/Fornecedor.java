@@ -4,9 +4,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -33,6 +36,13 @@ public class Fornecedor implements UserDetails {
     @Column(nullable = false)
     private String senha;
 
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime dataCriacao;
+
+    @UpdateTimestamp
+    private LocalDateTime dataAtualizacao;
+
     public Fornecedor() {}
 
     // Getters e Setters
@@ -48,6 +58,8 @@ public class Fornecedor implements UserDetails {
     public void setTelefone(String telefone) { this.telefone = telefone; }
     public String getSenha() { return senha; }
     public void setSenha(String senha) { this.senha = senha; }
+    public LocalDateTime getDataCriacao() { return dataCriacao; }
+    public LocalDateTime getDataAtualizacao() { return dataAtualizacao; }
 
     // Métodos do Spring Security
     @Override
