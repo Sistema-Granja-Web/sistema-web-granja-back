@@ -68,4 +68,15 @@ public class ProdutoService {
 
         produto = produtoRepository.save(produto);
     }
+
+    public void deletar(Long idProduto, String emailFornecedorLogado) {
+        Produto produto = produtoRepository.findById(idProduto)
+                .orElseThrow(() -> new NegocioException("Produto não encontrado."));
+
+        if (!produto.getFornecedor().getEmail().equals(emailFornecedorLogado)) {
+            throw new AcessoNegadoException("Acesso negado. Apenas o proprietário pode excluir este produto.");
+        }
+
+        produtoRepository.delete(produto);
+    }
 }

@@ -54,4 +54,13 @@ public class ProdutoController {
 
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        String emailFornecedorLogado = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        service.deletar(id, emailFornecedorLogado);
+
+        return ResponseEntity.noContent().build();
+    }
 }
